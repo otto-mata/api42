@@ -10,6 +10,8 @@ import threading
 from queue import Queue
 from copy import deepcopy
 
+from typings import User
+
 requests.packages.urllib3.disable_warnings()
 
 LOG = logging.getLogger(__name__)
@@ -122,6 +124,11 @@ class IntraAPIClient(object):
 
     def get(self, url, headers={}, **kwargs):
         return self.request(requests.get, url, headers, **kwargs)
+
+    def user(self, _id: str):
+        url = f"users/{_id}"
+        res = self.get(url).json()
+        return User.from_dict(res)
 
     def post(self, url, headers={}, **kwargs):
         return self.request(requests.post, url, headers, **kwargs)
