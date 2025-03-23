@@ -1,7 +1,6 @@
 import os
 import yaml
 import math
-import json
 import time
 import logging
 import requests
@@ -10,7 +9,7 @@ import threading
 from queue import Queue
 from copy import deepcopy
 
-from typings import User
+from otto_api42.typings import User
 
 requests.packages.urllib3.disable_warnings()
 
@@ -218,24 +217,3 @@ class IntraAPIClient(object):
                 total += active_threads[th]["queue"].get()
 
         return total
-
-    def prompt(self):
-        while 42:
-            try:
-                qr = input("$> http://api.intra.42.fr/v2/")
-            except EOFError:
-                break
-            if qr == "token":
-                print(ic.token)
-                continue
-
-            try:
-                ret = ic.get(qr)
-                json_str = json.dumps(ret.json(), indent=4)
-                print(json_str)
-            except Exception as e:
-                print(e)
-        print("bye")
-
-
-ic = IntraAPIClient()
