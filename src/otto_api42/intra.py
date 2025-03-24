@@ -19,16 +19,19 @@ LOG = logging.getLogger(__name__)
 class IntraAPIClient(object):
     verify_requests = False
 
-    def __init__(self):
-        base_dir = os.path.dirname(os.path.realpath(__file__))
-        with open(base_dir + "/config.yml", "r") as cfg_stream:
-            config = yaml.load(cfg_stream, Loader=yaml.BaseLoader)
-            self.client_id = config["intra"]["client"]
-            self.client_secret = config["intra"]["secret"]
-            self.token_url = config["intra"]["uri"]
-            self.api_url = config["intra"]["endpoint"]
-            self.scopes = config["intra"]["scopes"]
-            self.token = None
+    def __init__(self, config_path: str):
+        try:
+            with open(config_path, "r") as cfg_stream:
+                config = yaml.load(cfg_stream, Loader=yaml.BaseLoader)
+                self.client_id = config["intra"]["client"]
+                self.client_secret = config["intra"]["secret"]
+                self.token_url = config["intra"]["uri"]
+                self.api_url = config["intra"]["endpoint"]
+                self.scopes = config["intra"]["scopes"]
+                self.token = None
+        except FileNotFoundError:
+            print(f"Specified path '{config_path}' not found. Quitting.")
+            exit(1)
 
     def request_token(self):
         request_token_payload = {
