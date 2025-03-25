@@ -60,7 +60,7 @@ class IntraAPIClient(object):
         tries = 0
         if not url.startswith("http"):
             url = f"{self.api_url}/{url}"
-
+        return_object = dict()
         while True:
             LOG.debug(f"Attempting a request to {url}")
 
@@ -70,7 +70,8 @@ class IntraAPIClient(object):
                 verify=self.verify_requests,
                 **kwargs,
             )
-
+            return_object["raw"] = res
+            return_object["status"] = res.status_code
             rc = res.status_code
             if rc == 401:
                 if "www-authenticate" in res.headers:
@@ -104,25 +105,18 @@ class IntraAPIClient(object):
                 continue
 
             if rc >= 400:
-                req_data = "{}{}".format(
-                    url,
-                    (
+                req_data = {
+                    "url": (
                         "\n" + str(kwargs["params"])
                         if "params" in kwargs.keys()
                         else ""
                     ),
-                )
-                if rc < 500:
-                    raise ValueError(
-                        f"\n{res.headers}\n\nClientError. Error {str(rc)}\n{str(res.content)}\n{req_data}"
-                    )
-                else:
-                    raise ValueError(
-                        f"\n{res.headers}\n\nServerError. Error {str(rc)}\n{str(res.content)}\n{req_data}"
-                    )
+                }
+                return_object["complementary"] = req_data
+                return return_object
 
             LOG.debug(f"Request to {url} returned with code {rc}")
-            return res
+            return return_object
 
     def get(self, url, headers={}, **kwargs):
         return self.request(requests.get, url, headers, **kwargs)
