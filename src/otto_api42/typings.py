@@ -919,29 +919,29 @@ class User:
         out.alumnized_at = o.get("alumnized_at")
         out.alumni = o.get("alumni")
         out.active = o.get("active")
-        out.groups = [t for t in o.get("groups")]
+        out.groups = [t for t in o.get("groups", [])]
         out.cursus_users = [
-            CursusUser.from_dict(cu) for cu in o.get("cursus_users")
+            CursusUser.from_dict(cu) for cu in o.get("cursus_users", [])
         ]
         out.projects_users = [
-            ProjectsUser.from_dict(pu) for pu in o.get("projects_users")
+            ProjectsUser.from_dict(pu) for pu in o.get("projects_users", [])
         ]
         out.languages_users = [
-            LanguagesUser.from_dict(lu) for lu in o.get("languages_users")
+            LanguagesUser.from_dict(lu) for lu in o.get("languages_users", [])
         ]
         out.achievements = [
-            Achievement.from_dict(a) for a in o.get("achievements")
+            Achievement.from_dict(a) for a in o.get("achievements", [])
         ]
-        out.titles = [t for t in o.get("titles")]
-        out.titles_users = [t for t in o.get("titles_users")]
-        out.partnerships = [t for t in o.get("partnerships")]
-        out.patroned = [t for t in o.get("patroned")]
-        out.patroning = [t for t in o.get("patroning")]
-        out.expertises_users = [t for t in o.get("expertises_users")]
-        out.roles = [t for t in o.get("roles")]
-        out.campus = [Campus.from_dict(c) for c in o.get("campus")]
+        out.titles = [t for t in o.get("titles", [])]
+        out.titles_users = [t for t in o.get("titles_users", [])]
+        out.partnerships = [t for t in o.get("partnerships", [])]
+        out.patroned = [t for t in o.get("patroned", [])]
+        out.patroning = [t for t in o.get("patroning", [])]
+        out.expertises_users = [t for t in o.get("expertises_users", [])]
+        out.roles = [t for t in o.get("roles", [])]
+        out.campus = [Campus.from_dict(c) for c in o.get("campus", [])]
         out.campus_users = [
-            CampusUser.from_dict(cu) for cu in o.get("campus_users")
+            CampusUser.from_dict(cu) for cu in o.get("campus_users", [])
         ]
         return out
 

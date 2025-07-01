@@ -44,7 +44,7 @@ class IntraAPIClient(object):
         self.token = "token_dummy"
         res = self.request(
             requests.post, self.token_url, params=request_token_payload
-        )
+        )["raw"]
         rj = res.json()
         self.token = rj["access_token"]
         LOG.info(f"Got new acces token from intranet {self.token}")
@@ -119,24 +119,26 @@ class IntraAPIClient(object):
             return return_object
 
     def get(self, url, headers={}, **kwargs):
-        return self.request(requests.get, url, headers, **kwargs)
+        return self.request(requests.get, url, headers, **kwargs)["raw"]
 
     def user(self, _id: str):
         url = f"users/{_id}"
-        res = self.get(url).json()
-        return User.from_dict(res)
+        res = self.get(url)
+        if res.status_code == 200:
+            return User.from_dict(res.json())
+        return None
 
     def post(self, url, headers={}, **kwargs):
-        return self.request(requests.post, url, headers, **kwargs)
+        return self.request(requests.post, url, headers, **kwargs)["raw"]
 
     def patch(self, url, headers={}, **kwargs):
-        return self.request(requests.patch, url, headers, **kwargs)
+        return self.request(requests.patch, url, headers, **kwargs)["raw"]
 
     def put(self, url, headers={}, **kwargs):
-        return self.request(requests.put, url, headers, **kwargs)
+        return self.request(requests.put, url, headers, **kwargs)["raw"]
 
     def delete(self, url, headers={}, **kwargs):
-        return self.request(requests.delete, url, headers, **kwargs)
+        return self.request(requests.delete, url, headers, **kwargs)["raw"]
 
     def pages(self, url, headers={}, **kwargs):
         kwargs["params"] = kwargs.get("params", {}).copy()
